@@ -33,9 +33,10 @@ for k in $(jq '.vars | keys | .[]' variables.json); do
     raw_value=$(echo $value | jq '.value')
     escaped_value=$(echo $raw_value | sed -e 's/[]\/$*.^[]/\\&/g');
     sensitive=$(echo $value | jq '.sensitive')
+    category=$(echo $value | jq '.category')
 
     printf "\nCreate variable %s" "$key"
-    sed -e "s/T_KEY/$key/" -e "s/my-hcl/false/" -e "s/T_VALUE/$escaped_value/" -e "s/T_SECURED/$sensitive/" -e "s/T_WSID/$wid/" < /tmp/variable.payload  > paylaod.json
+    sed -e "s/T_KEY/$key/" -e "s/my-hcl/false/" -e "s/T_VALUE/$escaped_value/" -e "s/T_SECURED/$sensitive/" -e "s/T_WSID/$wid/" -e "s/T_CATEGORY/$category/" < /tmp/variable.payload  > paylaod.json
     curl -s --header "Authorization: Bearer $TF_TOKEN" --header "Content-Type: application/vnd.api+json" --request POST --data @paylaod.json "https://$TF_HOST/api/v2/workspaces/$wid/vars" > log.txt
 done
 
