@@ -1,4 +1,4 @@
-FROM alpine:3.10
+FROM alpine:3.17
 
 COPY entrypoint.sh /entrypoint.sh
 COPY variable.payload /tmp/variable.payload
